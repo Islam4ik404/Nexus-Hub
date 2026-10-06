@@ -2880,3 +2880,58 @@ RunService.Heartbeat:Connect(function()
 end)
 
 print("[AETHERIUS UPGRADE]: RTX shaders relocated to WORLD page successfully.")
+
+-- [[ AETHERIUS NEXUS MULTI-HUB: ADVANCED CLICK TP BYPASS ]]
+-- AUTONOMOUS RAYCAST COORDINATE INTERPOLATION FOR XENO EXECUTOR
+-- PRODUCTION SYSTEM TARGET Deployed: OCTOBER 2026 (BYFRON NET ENGINE)
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+local LocalMouse = LocalPlayer:GetMouse()
+local CurrentCamera = Workspace.CurrentCamera
+
+print("[AETHERIUS TP]: Автономный Клик-Телепорт загружен!")
+print("[AETHERIUS TP]: Зажми клавишу LeftCtrl + Клик ЛКМ в любую точку карты для беспалевного прыжка!")
+
+-- [[ МАТРИЦА ЛОКАЛЬНОГО RAYCAST ТЕЛЕПОРТА ]]
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    -- Проверяем, что нажат именно ЛКМ и при этом зажат Левый Ctrl
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        local Character = LocalPlayer.Character
+        local RootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+        local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
+        
+        if RootPart and Humanoid and Humanoid.Health > 0 then
+            pcall(function()
+                -- Пускаем луч из камеры по направлению курсора мыши
+                local MouseRay = CurrentCamera:ViewportPointToRay(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+                
+                local RaycastParamsData = RaycastParams.new()
+                RaycastParamsData.FilterFolder = {Character} -- Игнорируем хитбокс своего тела
+                RaycastParamsData.FilterType = Enum.RaycastFilterType.Exclude
+                
+                -- Вычисляем пересечение луча с текстурами карты на дистанции до 5000 студов
+                local RaycastResult = Workspace:Raycast(MouseRay.Origin, MouseRay.Direction * 5000, RaycastParamsData)
+                
+                if RaycastResult then
+                    local Target3DPosition = RaycastResult.Position
+                    
+                    -- Гасим скорость падения/движения, чтобы античит не вернул назад
+                    RootPart.Velocity = Vector3.new(0, 0, 0)
+                    RootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    
+                    -- Мгновенно переносим CFrame в точку клика с безопасным смещением вверх (+3.5 студа), чтобы не провалиться под пол
+                    RootPart.CFrame = CFrame.new(Target3DPosition + Vector3.new(0, 3.5, 0))
+                    
+                    print("[AETHERIUS TP]: Телепорт выполнен успешно на координаты: " .. tostring(Target3DPosition))
+                end
+             pcall(function() obj.CFrame = Nexus.State.RootPartCached.CFrame * CFrame.new(0, -2, 0) end)   end)
+        end
+    end
+end)
